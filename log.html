@@ -1,0 +1,95 @@
+<!DOCTYPE html><html><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lukis Log</title>
+<style type="text/css">
+body{margin:40px  auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0
+10px}
+h1,h2,h3{line-height:1.2}
+</style>
+</head><body>
+ <h2>9.10.2020: Devicetree usage in Linux</h2>
+ <h2>30.6.2020: The I2C bus driver specification </h2>
+
+Recently we started working with Jan Schär (who writes a bachelor thesis) 
+to develop a formal model of I2C. Why would we do such a thing?
+
+Microkernels run drivers in userspace. This isolates, from a memory
+perspective, the device driver: It will not be able to access
+memory not explicitly assigned to the driver. 
+(However, this is not quite
+enough, because the driver is in control of hardware, which in turn
+might maliciously affect the rest of the system. An example of such a
+privilege escalation is the DMA attack.)
+Since we partition on memory granularity, this works fine for memory
+mapped devices. But in a modern system, many devices are actually 
+<b>not</b> memory mapped. For example, USB devices or, I2C attached devices,
+or also SD cards (a SD host controller can talk to multiple cards).
+To such devices, a driver communicates using a <b>intermediary</b>. Obviously
+this intermediary 
+
+We choose I2C because it is critical (controls voltage regulators) and
+- through the presence of non standard conforming devices - is hard to programs
+and master drivers are riddled with "quirks" and special purpose flags 
+to communicate with a non-conforming device.
+
+Furthermore, depending on how much logic is built in hardware
+(or, if the intermediary runs in userspace in a monolithic system, the API)
+the backend of the intermediary varies greatly and ranges from electrical
+signals (for bit-banging I2C) up to SMBus transactions (for example a linux
+driver for a SMBus device). 
+
+This combination of non-conforming devices and differing APIs an intermediary
+could use, we decided to develop layered model. In this way: We can a)
+reason about non-conforming devices and b) reason about intermediaries that
+use different backends.
+
+<h2>9.1.2020: Writing a usdhc driver for the colibri board</h2>
+<p>We are getting ready to run our advanced operating systems course
+next semester on a new ARMv8 board, specifically on the
+<a href="https://www.toradex.com/computer-on-modules/colibri-arm-family">Colibri
+iMX8x</a>. To let the students focus on interesting projects,
+such as writing a file system, we give them some libraries to interact with
+the hardware. So I went on to write a SD host controller and card driver.</p>
+
+<p>The iMX8X Datasheet states the host controller is SDHC standard compatible,
+and assumed that we can use the standard driver that follows the SDHC standard.
+After some fiddling, it dawned on me, that I must be talking to a different
+device, despite having some overlap with the standard: For example the host
+capability register looked meaningful. After checking which driver our
+bootloader U-Boot uses (fsl_esdhc.c), I realized that the host controller is
+quite different from the standard. Following the register descriptions of the
+IMX8X manual made more sense and I successfully communicated with the host and
+performed a card reset procedure. Apart from the reset, I was unable to run
+anything that interacts with the SD card. I assumed it was some error with the
+clock or power setup. But none of the relevant settings (such as prescaler,
+divisor, clock enable etc.) seemed to change anything. So I gave up on
+reading the datasheet and instrumented the bootloader to print a register
+access trace. Finally, I found the missing bit: U-Boot set
+some bits in the "vendor specific" register that are, according to the
+datasheet reserved. After setting the same bits as U-Boot, suddenly
+card transactions started to work!</p>
+
+<p>Some future work items for improving the driver:
+<ul>
+    <li>The card detection pin is wired to a GPIO pin, not the proper
+        card detection pin. Whether a card is present or not can be
+        easily detected, the transactions will time out. However, it's
+        hard to get an interrupt on card insertion.</li>
+    <li>Optimize it for speed (we never leave the legacy 40MHz clock setting)</li>
+    <li>The internal eMMC card works slightly differently than SD cards,
+        adapting the driver to that would be handy, then we don't 
+        have to give students a SD card.</li>
+</ul>
+</p> 
+
+<h2>9. November 2018: Physical Adressing on Real Hardware in Isabelle/HOL</h2>
+I wrote the following <a href="https://blog.systems.ethz.ch/blog/2018/phyiscal-adressing-on-real-hw.html">article<a/>
+for the systems group blog.
+
+
+</body>
+</html>
+
+
+ 
+
