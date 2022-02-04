@@ -1920,6 +1920,11 @@ HEADER = """
                 width: 40px;
                 height: 40px;
             }
+            body {
+                text-align: left;
+                font-size: 14px;
+                line-height: 20px;
+            }
         }
 
         .social-icon {
