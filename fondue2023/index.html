@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+             integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+             crossorigin=""/>
+    </head>
+
+    <body style="width: 800px;">
+         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+        <h3>4aN Fondue 2023</h3>
+        Hoi zäme, dieses Jahr findet das Fondue zur Abwechslung mal in Zürich statt, schön
+        das ihr die weite Reise auf euch nehmt 8-)
+
+        Am 28. Dezember 2023. Zeit sind wir flexibel, der Raum ist ab 12Uhr verfügbar
+        und ich habe gehört die ersten wollen schon dann kommen. Aber wir bleiben sicher 
+        bis spät Abends da.
+
+        Um genau zu sein im
+        <a href="https://www.bg-glattal.ch/mieterservices/gemeinschaftsraeume/seebach">BGZ
+            Pavillon</a> in Seebach.
+
+        Mitbringsel wie immer selber organisieren, Denner und Migros hat es gleich um die Ecke wo man
+        sich noch mit dem Nötigsten (Bier) eindecken kann.
+
+        Falls was schief geht, meine Tel. Nr: +41 77 407 6226
+
+        <h3>Anreise</h3>
+        <p>
+        Mit ÖV fährt ihr entweder mit dem Tram 14 zur Endhaltestelle Seebach (+300m zu Fuss), 
+        ihr nehmt die S-Bahn S6 nach Zürich Seebach (+700m Fussweg) oder Oerlikon (+1200m zu Fuss).
+        </p>
+
+        <p>
+        Veloparkplätze hat es viele und man darf bei Anreise mit dem Fahrrad auch unsere Dusche
+        gleich nebenan benutzen.
+        </p>
+
+        <p>
+        Autoparkplätze hat es einige in der Blauen Zone beim Pavillon oder bei der Tramhaltestelle
+        Seebach.
+        </p>
+
+        <a href="https://maps.app.goo.gl/hgrMGZafKVCeioMA8">Google Maps Link</a>
+        <div id="map" style="height:50%; width= 80%"/>
+
+
+        <script type="text/javascript">
+            var map = L.map('map').setView([47.422462, 8.546693], 13);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([47.422462, 8.546693]).addTo(map)
+                .bindPopup('🫕')
+                .openPopup();
+
+            //function onMapClick(e) {
+            //    alert("You clicked the map at " + e.latlng);
+            //}
+
+            //map.on('click', onMapClick);
+        </script>
+
+
+    </body>
+</html>
